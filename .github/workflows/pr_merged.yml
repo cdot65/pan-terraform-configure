@@ -40,7 +40,11 @@ jobs:
         run: |
           cd firewalls/hou-vfw-01
           terraform init -backend-config="bucket=${{ secrets.BACKEND_BUCKET }}"
-          terraform workspace select hou-vfw-01
+          if ! terraform workspace list | grep -q 'hou-vfw-01'; then
+            terraform workspace new hou-vfw-01
+          else
+            terraform workspace select hou-vfw-01
+          fi
 
       - name: Terraform Validate
         run: terraform validate
