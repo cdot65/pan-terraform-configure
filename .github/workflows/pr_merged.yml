@@ -38,8 +38,8 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd san-vfw-01
-          terraform workspace new san-vfw-01
+          cd hou-vfw-01
+          terraform workspace new hou-vfw-01
           terraform init
 
       - name: Terraform Validate
@@ -49,7 +49,7 @@ jobs:
         run: terraform state pull
 
       - name: Terraform Apply
-        working-directory: san-vfw-01/
+        working-directory: hou-vfw-01/
         run: terraform apply -auto-approve | sed 's/\x1b\[[0-9;]*m//g' > config_diff.txt
         env:
           TF_VAR_panos_username: ${{ secrets.PANOS_USERNAME }}
@@ -59,10 +59,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: config_diff
-          path: san-vfw-01/config_diff.txt
+          path: hou-vfw-01/config_diff.txt
 
       - name: Commit Firewall Configurations
-        run: ./scripts/firewall-commit -auth san-vfw-01/auth.json
+        run: ./scripts/firewall-commit -auth hou-vfw-01/auth.json
 
   post_plan_comment:
     runs-on: self-hosted
@@ -75,7 +75,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: config_diff
-          path: san-vfw-01/
+          path: hou-vfw-01/
 
       - name: Post Plan Result as Comment
         uses: actions/github-script@v5
@@ -83,7 +83,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const config_diff = fs.readFileSync(path.join(process.env.GITHUB_WORKSPACE, 'san-vfw-01', 'config_diff.txt'), 'utf8');
+            const config_diff = fs.readFileSync(path.join(process.env.GITHUB_WORKSPACE, 'hou-vfw-01', 'config_diff.txt'), 'utf8');
             const pr_id = context.issue.number;
             const comment_body = `\`\`\`
                 ${config_diff}
