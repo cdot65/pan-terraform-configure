@@ -39,8 +39,8 @@ jobs:
       - name: Terraform Init
         run: |
           cd firewalls/hou-vfw-01
-          terraform workspace new hou-vfw-01
           terraform init -backend-config="bucket=${{ secrets.BACKEND_BUCKET }}"
+          terraform workspace select hou-vfw-01
 
       - name: Terraform Validate
         run: terraform validate
