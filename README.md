@@ -45,7 +45,7 @@ Before you get started, ensure you have the following installed on your system:
 
 ### Usage
 
-1. Update the Terraform configuration files in the `san-vfw-01` directory as needed. See [Terraform Configuration Files](#terraform-configuration-files) for details.
+1. Update the Terraform configuration files in the `hou-vfw-01` directory as needed. See [Terraform Configuration Files](#terraform-configuration-files) for details.
 
 2. Push changes to the `main` branch:
 
