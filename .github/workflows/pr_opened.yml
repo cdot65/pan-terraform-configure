@@ -36,7 +36,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-          cd hou-vfw-01
+          cd firewalls/hou-vfw-01
           terraform workspace new hou-vfw-01
           terraform init
 
@@ -47,7 +47,7 @@ jobs:
         run: terraform state pull
 
       - name: Terraform Plan
-        working-directory: hou-vfw-01/
+        working-directory: firewalls/hou-vfw-01/
         run: terraform plan | sed 's/\x1b\[[0-9;]*m//g' > config_diff.txt
         env:
           TF_VAR_panos_username: ${{ secrets.PANOS_USERNAME }}
@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: config_diff
-          path: hou-vfw-01/config_diff.txt
+          path: firewalls/hou-vfw-01/config_diff.txt
 
   post_plan_comment:
     runs-on: self-hosted
@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: config_diff
-          path: hou-vfw-01/
+          path: firewalls/hou-vfw-01/
 
       - name: Post Plan Result as Comment
         uses: actions/github-script@v5
