@@ -1,4 +1,4 @@
-name: Diff proposed configuration changes (PR opened)
+name: Diff proposed changes (PR opened)
 
 on:
   pull_request:

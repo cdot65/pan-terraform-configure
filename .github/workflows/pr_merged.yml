@@ -1,4 +1,4 @@
-name: Diff proposed configuration changes (PR opened)
+name: Push to production (PR Merged)
 
 on:
   pull_request:
