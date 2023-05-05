@@ -1,157 +1,141 @@
-# Managing PAN-OS Firewall Configuration with Terraform
+# Terraform PAN-OS Configuration Examples
 
-## Step 1 - Setting Up the Terraform Project
+This repository contains a collection of examples to help you get started with using Terraform to automate the configuration management of Palo Alto Networks firewalls. These examples assume no prior experience with Terraform, making it friendly for beginners who are new to automation.
 
-1. Create a new directory for your Terraform project and navigate to it:
+## Table of Contents
 
-    ```bash
-    mkdir panos-terraform
-    cd panos-terraform
-    ```
+- [Terraform PAN-OS Configuration Examples](#terraform-pan-os-configuration-examples)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
+  - [Directory Structure](#directory-structure)
+  - [Getting Started](#getting-started)
+  - [Example 1: Simple](#example-1-simple)
+  - [Example 2: Modules](#example-2-modules)
+  - [Example 3: Complex Resources](#example-3-complex-resources)
+  - [Conclusion](#conclusion)
 
-2. Initialize your Terraform project with the `terraform init` command:
+## Introduction
 
-    ```bash
-    terraform init
-    ```
+Terraform is an open-source Infrastructure as Code (IaC) tool that enables you to automate and manage infrastructure using declarative configuration files. This repository demonstrates the usage of Terraform with the "panos" provider from Palo Alto Networks, allowing you to manage your PAN-OS configuration.
 
-3. Create a `provider.tf` file to define the PAN-OS provider:
+## Prerequisites
 
-    ```hcl
-    provider "panos" {
-        hostname     = var.hostname
-        username     = var.pan_username
-        password     = var.pan_password
-    }
-    ```
+Before you get started, ensure you have the following prerequisites in place:
 
-4. Install the PAN-OS provider by running `terraform init` again:
+1. Install [Terraform](https://www.terraform.io/downloads.html) on your local machine.
+2. Install [Git](https://git-scm.com/downloads) to clone this repository.
+3. Familiarity with Palo Alto Networks firewalls and PAN-OS.
 
-    ```bash
-    terraform init
-    ```
+## Directory Structure
 
-    The PAN-OS provider should be successfully installed, as indicated in the Prerequisites section.
+Here's a high-level overview of the directory structure:
 
-5. Define input variables: Create a `variables.tf` file to define the input variables for the PAN-OS firewall hostname, username, and password:
+```bash
+.
+├── README.md (This file)
+├── blog.md
+└── examples
+├── 01_Simple
+├── 02_Modules
+└── 03_Complex_Resources
+```
 
-    ```hcl
-    variable "hostname" {
-      type = string
-    }
-    variable "pan_username" {
-      type = string
-    }
-    variable "pan_password" {
-      type = string
-    }
-    ```
+The `examples` directory contains three examples that demonstrate how to use Terraform with PAN-OS:
 
-6. Define variable values: Create a `terraform.tfvars` file to specify the values for the input variables:
+1. `01_Simple`: A basic example to get you started with Terraform and PAN-OS.
+2. `02_Modules`: This example introduces the concept of Terraform modules, which help you organize and reuse your code.
+3. `03_Complex_Resources`: A more advanced example that includes complex data structures and resource configurations.
 
-    ```terraform
-    hostname     = "192.168.1.1"
-    pan_username = "admin"
-    pan_password = "password123"
-    ```
+## Getting Started
 
-7. Save your changes and run `terraform init` again to ensure the provider configuration is properly loaded.
+To get started, clone this repository to your local machine:
 
-Now your initial project is set up and ready for further configuration.
+```bash
+git clone https://github.com/cdot65/pan-terraform-configure.git
+```
 
-## Step 2 - Defining the Firewall Configuration
+After cloning the repository, navigate to the desired example directory:
 
-Now, let's define the PAN-OS firewall configuration using the `panos` Terraform provider. In your `main.tf` file, add the necessary configuration blocks for your firewall:
+```bash
+cd pan-terraform-configure/examples/01_Simple
+```
 
-1. Configure the PAN-OS provider: The provider configuration is already defined in the `provider.tf` file.
+## Example 1: Simple
 
-2. Import the modules: In your `main.tf` file, call the modules for network, policy, and object configurations:
+In this example, you will learn how to set up a basic Terraform configuration for PAN-OS. The following files are included:
 
-    ```terraform
-    module "network" {
-      source       = "./modules/network"
-      hostname     = var.hostname
-      pan_username = var.pan_username
-      pan_password = var.pan_password
-    }
+- [main.tf](examples/01_Simple/main.tf): The main Terraform configuration file that defines your resources.
+- [provider.tf](examples/01_Simple/provider.tf): Configures the "panos" provider.
+- [terraform.tfvars](examples/01_Simple/terraform.tfvars): Contains variable values that are specific to your environment.
+- [variables.tf](examples/01_Simple/variables.tf): Defines input variables for your Terraform configuration.
 
-    module "object" {
-      source       = "./modules/object"
-      hostname     = var.hostname
-      pan_username = var.pan_username
-      pan_password = var.pan_password
-    }
+To initialize your Terraform workspace, run the following command:
 
-    module "policy" {
-      source       = "./modules/policy"
-      hostname     = var.hostname
-      pan_username = var.pan_username
-      pan_password = var.pan_password
+```bash
+terraform init
+```
 
-      wan_zone = module.network.wan_zone
-      lan_zone = module.network.lan_zone
-    }
-    ```
+This command downloads the required provider plugins and sets up the backend for storing your Terraform state.
 
-3. Configure the necessary resources for your firewall, such as interfaces, zones, and policies. The resource configurations are defined in the respective module directories (`modules/network`, `modules/object`, and `modules/policy`).
+Next, create a plan to see the changes that will be made to your PAN-OS configuration:
 
-By defining the firewall configuration using Terraform, you can manage and automate the configuration of your PAN-OS firewall in a declarative and version-controlled manner.
+```bash
+terraform plan
+```
 
-## Step 3 - Creating modules
+If you're satisfied with the plan, apply the changes by running:
 
-To better manage your PAN-OS firewall configuration, you can organize your code into modules, such as "network", "policy", and "object". Modules make it easier to maintain and reuse code.
+```bash
+terraform apply
+```
 
-Create separate directories for each module within your project, such as `modules/network`, `modules/policy`, and `modules/object`.
+Once your configuration has been successfully applied, you can destroy the resources you've created by running:
 
-Within each module directory, create Terraform configuration files (e.g., `main.tf`, `variables.tf`, `outputs.tf`) to define the resources, variables, and outputs for that module.
+## Example 2: Modules
 
-## Step 4 - Planning and Applying the Configuration
+In this example, you will learn how to use Terraform modules to better organize and reuse your code. The following files are included:
 
-After defining your firewall configuration, you can use Terraform commands to plan and apply the changes to your PAN-OS firewall.
+- [main.tf](examples/02_Modules/main.tf): The main Terraform configuration file that calls the defined modules.
+- [modules](examples/02_Modules/modules): A directory containing the following submodules:
+- [network](examples/02_Modules/network): A module for managing network resources.
+- [object](examples/02_Modules/object): A module for managing object resources.
+- [policy](examples/02_Modules/policy): A module for managing policy resources.
+- [provider.tf](examples/02_Modules/provider.tf): Configures the "panos" provider.
+- [terraform.tfvars](examples/02_Modules/terraform.tfvars): Contains variable values that are specific to your environment.
+- [variables.tf](examples/02_Modules/variables.tf): Defines input variables for your Terraform configuration.
 
-1. Run the following command to review the changes Terraform will make to your PAN-OS firewall:
+Navigate to the 02_Modules directory:
 
-    ```bash
-    terraform plan
-    ```
+```bash
+cd ../02_Modules
+```
 
-    The plan command will output a detailed list of the resources Terraform will create, modify, or delete. Carefully review the plan to ensure it aligns with your desired configuration.
+Follow the same steps as in Example 1 to initialize your Terraform workspace, create a plan, apply the changes, and destroy the resources when you're finished.
 
-2. If you're satisfied with the plan, apply your configuration by running the terraform apply command:
+## Example 3: Complex Resources
 
-    ```bash
-    terraform apply
-    ```
+In this example, you will work with complex data structures and resource configurations. The following files are included:
 
-    Terraform will prompt you to confirm that you want to apply the changes. Type yes and press Enter to proceed. Terraform will create, modify, or delete resources as specified in your plan.
+- [main.tf](examples/03_Complex_Resources/main.tf): The main Terraform configuration file that calls the defined modules.
+- [modules](examples/03_Complex_Resources/modules): A directory containing the following submodules:
+- [network](examples/03_Complex_Resources/network): A module for managing network resources.
+- [object](examples/03_Complex_Resources/object): A module for managing object resources.
+- [policy](examples/03_Complex_Resources/policy): A module for managing policy resources.
+- [provider.tf](examples/03_Complex_Resources/provider.tf): Configures the "panos" provider.
+- [terraform.tfvars](examples/03_Complex_Resources/terraform.tfvars): Contains variable values that are specific to your environment.
+- [variables.tf](examples/03_Complex_Resources/variables.tf): Defines input variables for your Terraform configuration.
 
-    Remember to store the Terraform state file securely, as it contains sensitive information about your infrastructure.
+Navigate to the 03_Complex_Resources directory:
 
-## Step 5 - Organizing Modules
+```bash
+cd ../03_Complex_Resources
+```
 
-To better organize your Terraform project, you can create separate modules for different aspects of your PAN-OS firewall configuration. In this project, we have created three modules: "network," "object," and "policy."
-
-### Network Module
-
-The network module is located in the modules/network directory and contains the configuration for Ethernet interfaces, zones, and virtual routers. The main.tf file in this module defines resources such as panos_ethernet_interface, panos_zone, and panos_virtual_router.
-
-The outputs.tf file in the network module defines outputs for the WAN and LAN zones, which are used as input variables in the policy module.
-
-### Object Module
-
-The object module is located in the modules/object directory and contains the configuration for administrative tags and address objects. The main.tf file in this module defines resources such as panos_administrative_tag and panos_address_object.
-
-The outputs.tf file in the object module defines an output for the hypervisor tag.
-
-### Policy Module
-
-The policy module is located in the modules/policy directory and contains the configuration for security policies. The main.tf file in this module defines resources such as panos_security_policy.
-
-Each module has its own provider.tf file to specify the required providers and their configurations. The variables.tf file in each module defines input variables specific to that module.
+Follow the same steps as in Example 1 to initialize your Terraform workspace, create a plan, apply the changes, and destroy the resources when you're finished.
 
 ## Conclusion
 
-In this README, we've explored how to manage the configuration of PAN-OS firewalls using the "panos" Terraform provider from Palo Alto Networks. We covered the setup of a Terraform project, the creation of modules for network, policy, and object configurations, and the process of planning and applying the configuration using Terraform.
+Congratulations! 🎉 You've now learned how to use Terraform with the "panos" provider to manage your Palo Alto Networks firewall configurations. These examples should help you get started with your own Terraform projects and provide a foundation for automating your PAN-OS configuration.
 
-By leveraging the power of Terraform and the "panos" provider, you can automate and simplify the management of your PAN-OS firewall configurations, enabling you to maintain consistency and reduce the potential for human error.
-
+Don't forget to check out the official Terraform documentation and the PAN-OS provider documentation for more information and examples.
