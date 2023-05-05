@@ -39,3 +39,7 @@ terraform.rc
 
 **chatgpt**
 **auth.json**
+**actions-runner**
+**test
+.vscode/**
+**chatgpt**
