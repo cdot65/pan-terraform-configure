@@ -1,3 +1,3 @@
-output "example_security_policy" {
-  value = panos_security_policy.security_policies["dmz_to_wan"].id
+output "example_security_rule_group" {
+  value = panos_security_rule_group.dmz_to_wan.id
 }

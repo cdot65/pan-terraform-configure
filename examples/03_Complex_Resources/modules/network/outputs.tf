@@ -4,6 +4,10 @@ output "wan_zone" {
   value = panos_zone.zone["wan"].name
 }
 
+output "dmz_zone" {
+  value = panos_zone.zone["dmz"].name
+}
+
 output "lan_zone" {
   value = panos_zone.zone["lan"].name
 }

@@ -26,6 +26,7 @@ module "policy" {
   security_policies   = var.security_policies
   administrative_tags = module.object.administrative_tags
   address_objects     = module.object.address_objects
+  dmz_zone            = module.network.dmz_zone
   wan_zone            = module.network.wan_zone
   lan_zone            = module.network.lan_zone
 }
